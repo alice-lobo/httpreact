@@ -12,14 +12,15 @@ function App() {
   const [products, setProducts] = useState([]);
 
   // 4 - custom hook
-  const { data } = useFetch(url);
-  console.log(data);
+  //const { data } = useFetch(url);
+  //console.log(data);
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
 
+  const [itemId, setItemId] = useState(null);
   // 1 - resgatando dados
-  /* useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
       const res = await fetch(url);
 
@@ -28,7 +29,7 @@ function App() {
       setProducts(data);
     }
     fetchData();
-  }, []); */
+  }, []);
   
 
   // 2 - add de produtos
@@ -57,13 +58,29 @@ function App() {
     setName("");
     setPrice("");
   }
+  // 3 - desafio 6
+  const handleRemove = async (id) => {
+        const deleteUrl = `${url}/${id}`;
+
+        const res = await fetch(deleteUrl, {
+          method: "DELETE",
+          headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      //const json = await res.json();
+  }
+
 
   return (
     <div className="App">
       <h1>Lista de produtos</h1>
       <ul>
-        {data && data.map((product) => (
-          <li key={product.id}>{product.name} - R$= {product.price}</li>
+        {products && products.map((product) => (
+          <li key={product.id}>{product.name} - R$= {product.price}
+            <button onClick={()=> handleRemove(product.id)}>Excluir</button>
+          </li>
+          
         ))}
       </ul>
       {/* <ul>
@@ -78,6 +95,8 @@ function App() {
             <input type="number" value={price} name="price" placeholder='Valor: ' onChange={(e) => setPrice(e.target.value)} />
             <input type="submit" value="Criar" />
           </form>
+          <hr />
+          
       </div>
     </div>
   );
